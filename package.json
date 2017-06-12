@@ -2,9 +2,14 @@
   "name": "system-canopy-script",
   "version": "0.0.2",
   "description": "SystemJS plugin for script loading sofe services",
-  "main": "system-script.js",
+  "main": "dist/system-canopy-script.js",
   "scripts": {
-    "test": "karma start karma.conf.js"
+    "test": "karma start karma.conf.js",
+		"dist": "npm run clean && npm run build && npm run uglify",
+    "build": "babel src --out-dir lib && node build.js",
+		"uglify": "uglifyjs dist/system-canopy-script.js --source-map -o dist/system-canopy-script.min.js && echo 'Uglified system-canopy-script into dist/system-canopy-script.min.js'",
+    "clean": "rm -rf lib dist",
+    "prepublish": "npm run build"
   },
   "author": "Bret Little",
   "license": "MIT",
@@ -27,7 +32,8 @@
     "rollup": "^0.41.6",
     "rollup-plugin-commonjs": "^8.0.2",
     "rollup-plugin-node-resolve": "^3.0.0",
-    "systemjs": "^0.20.13"
+    "systemjs": "^0.20.13",
+    "uglify-js": "^3.0.15"
   },
   "directories": {
     "test": "test"
