@@ -67,6 +67,9 @@
     "canopy",
     "sofe"
   ],
+	"files": [
+		"src", "lib", "dist"
+	],
   "bugs": {
     "url": "https://github.com/CanopyTax/system-canopy-script/issues"
   },
