@@ -1,6 +1,6 @@
 {
   "name": "system-canopy-script",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "SystemJS plugin for script loading sofe services",
   "main": "dist/system-canopy-script.js",
   "scripts": {
@@ -67,9 +67,11 @@
     "canopy",
     "sofe"
   ],
-	"files": [
-		"src", "lib", "dist"
-	],
+  "files": [
+    "src",
+    "lib",
+    "dist"
+  ],
   "bugs": {
     "url": "https://github.com/CanopyTax/system-canopy-script/issues"
   },
