@@ -49,15 +49,11 @@ export function fetch(load) {
 		}
 
 		function error(evt) {
-			reject(evt);
+			reject(new Error(`Error loading module from the address: "${load.address}"`));
 		}
 
-		if (script.attachEvent) {
-			script.attachEvent("onreadystatechange", complete);
-		} else {
-			script.addEventListener("load", complete, false);
-			script.addEventListener("error", error, false);
-		}
+		script.addEventListener("load", complete, false);
+		script.addEventListener("error", error, false);
 
 		script.src = load.address;
 		head.appendChild(script);

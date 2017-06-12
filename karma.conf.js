@@ -4,14 +4,6 @@
 module.exports = function(config) {
 	config.set({
 
-		// plugins: [
-		//   'karma-chrome-launcher',
-		//   'karma-phantomjs-launcher',
-		//   'karma-jasmine',
-		//   'karma-coverage',
-		//   'karma-babel-preprocessor'
-		// ],
-
 		// base path that will be used to resolve all patterns (eg. files, exclude)
 		basePath: '',
 
@@ -40,8 +32,7 @@ module.exports = function(config) {
 		// preprocess matching files before serving them to the browser
 		// available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
 		preprocessors: {
-			// 'src#<{(||)}>#*.*': ['babel', 'coverage'],
-			'src/**/*.*': ['babel'],
+			'src/**/*.*': ['babel', 'coverage'],
 			'test/fixtures/*.js': ['babel'],
 			'test/*.test.js': ['babel']
 		},
@@ -77,12 +68,12 @@ module.exports = function(config) {
 
 		// start these browsers
 		// available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-		browsers: ['Chrome'],
+		browsers: ['PhantomJS'],
 
 
 		// Continuous Integration mode
 		// if true, Karma captures browsers, runs the tests and exits
-		singleRun: false,
+		singleRun: true,
 
 		// Concurrency level
 		// how many browser should be started simultanous

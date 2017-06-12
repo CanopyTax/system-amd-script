@@ -51,6 +51,19 @@ describe('sofe api', function() {
 		})
 	});
 
+	it('should throw an error for 404 urls', function(done) {
+		system
+		.import('/base/test/fixtures/module-no-exist.js!/base/src/system-script.js')
+		.then(function(m) {
+			fail(new Error('Should not have resolved!'));
+			done();
+		})
+		.catch(error => {
+			console.log('Error loading module from the address: "test/fixtures/module-no-exist.js"');
+			expect(error.message.split('\n')[0]).toBe('Error loading module from the address: "http://localhost:9876/base/test/fixtures/module-no-exist.js"');
+			done();
+		})
+	});
 
 	it("Should pre-load modules that are script-tagged directly", function(done) {
 		system
