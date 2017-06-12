@@ -1,6 +1,6 @@
 {
   "name": "system-canopy-script",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "SystemJS plugin for script loading sofe services",
   "main": "system-script.js",
   "scripts": {
