@@ -33,3 +33,20 @@ import getValue from 'helper!system-canopy-script';
 
 getValue() === 'Some value!';
 ```
+
+
+### Pre-loading modules
+You can preload modules by directly putting your module's script tag into your index.html page:
+
+```html
+<html>
+  <script src="/system.js"></script>
+  <script src="/system-amd-script.js"></script>
+  <script src="/helper.js"></script>
+  <script>
+    // Because the helper script tag is already on the page,
+    // a new one will not be added!
+    System.import('helper!system-canopy-script');    	
+  </script>
+</html>
+```
