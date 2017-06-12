@@ -1,15 +1,15 @@
 {
-  "name": "system-canopy-script",
+  "name": "system-amd-script",
   "version": "1.0.1",
   "description": "SystemJS plugin for script loading sofe services",
-  "main": "dist/system-canopy-script.js",
+  "main": "dist/system-amd-script.js",
   "scripts": {
     "test": "karma start karma.conf.js",
     "dist": "npm run clean && npm run build && npm run uglify",
     "build": "babel src --out-dir lib && node build.js",
-    "uglify": "uglifyjs dist/system-canopy-script.js --source-map -o dist/system-canopy-script.min.js && echo 'Uglified system-canopy-script into dist/system-canopy-script.min.js'",
+    "uglify": "uglifyjs dist/system-amd-script.js --source-map -o dist/system-amd-script.min.js && echo 'Uglified system-amd-script into dist/system-amd-script.min.js'",
     "clean": "rm -rf lib dist",
-    "prepublish": "npm run build"
+    "prepublish": "npm run dist"
   },
   "author": "Bret Little",
   "license": "MIT",
@@ -60,11 +60,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/CanopyTax/system-canopy-script.git"
+    "url": "git+https://github.com/CanopyTax/system-amd-script.git"
   },
   "keywords": [
     "systemjs",
-    "canopy",
+    "amd",
     "sofe"
   ],
   "files": [
@@ -73,7 +73,7 @@
     "dist"
   ],
   "bugs": {
-    "url": "https://github.com/CanopyTax/system-canopy-script/issues"
+    "url": "https://github.com/CanopyTax/system-amd-script/issues"
   },
-  "homepage": "https://github.com/CanopyTax/system-canopy-script#readme"
+  "homepage": "https://github.com/CanopyTax/system-amd-script#readme"
 }

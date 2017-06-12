@@ -24,7 +24,7 @@ rollup({
 		commonjs(),
 	]
 }).then( function(bundle) {
-	bundle.write({ dest: 'dist/system-canopy-script.js', format: 'cjs' })
+	bundle.write({ dest: 'dist/system-amd-script.js', format: 'cjs' })
 	console.log("Wrote rollup bundle into dist")
 })
 .catch(function(err) {
