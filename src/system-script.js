@@ -74,10 +74,15 @@ export function fetch(load) {
 
 export function instantiate(load) {
 	const system = this;
-	const name = normalizeName(load.name.substring(window.location.origin.length + 1));
+	const name = normalizeName(
+		load.name.substring(window.location.origin.length + 1)
+	);
 	const address = scriptNameMap[name];
 
-	if (!address) return Promise.reject(new Error(`${name} was not properly loaded!`));
+	if (!address)
+		return Promise.reject(new Error(`${name} was not properly loaded!`));
 
-	return system.import(address);
+	return system
+		.import(address)
+		.then(load => load.__esModule ? Object.assign({}, load, { __esModule: true }) : load);
 }
