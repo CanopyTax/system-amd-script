@@ -84,5 +84,25 @@ export function instantiate(load) {
 
 	return system
 		.import(address)
-		.then(load => load.__esModule ? Object.assign({}, load, { __esModule: true }) : load);
+		.then(load => {
+			return load.__esModule ? assign(assign({}, load), { __esModule: true }) : load
+		});
 }
+
+const assign = function(target, varArgs) {
+    var to = Object(target);
+
+    for (var index = 1; index < arguments.length; index++) {
+      var nextSource = arguments[index];
+
+      if (nextSource != null) { // Skip over if undefined or null
+        for (var nextKey in nextSource) {
+          // Avoid bugs when hasOwnProperty is shadowed
+          if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
+            to[nextKey] = nextSource[nextKey];
+          }
+        }
+      }
+    }
+    return to;
+  };
