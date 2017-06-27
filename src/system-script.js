@@ -1,6 +1,6 @@
 let nameCounter = 0;
 let scriptNameMap = {};
-let outerSystem = null;
+let outerSystem = SystemJS;
 
 window.define = window.canopyDefine = function(name, deps, m) {
 	if (typeof name === "string") {
