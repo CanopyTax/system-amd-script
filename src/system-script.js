@@ -5,7 +5,7 @@ let outerSystem = SystemJS;
 window.define = window.canopyDefine = function(name, deps, m) {
 	if (typeof name === "string") {
 		nameCounter++;
-		const newName = `__script__${nameCounter}`;
+		const newName = `__samds__${name}__${nameCounter}`;
 		scriptNameMap[
 			name.indexOf("!") > -1 ? name.substring(0, name.indexOf("!")) : name
 		] = newName;
@@ -74,9 +74,8 @@ export function fetch(load) {
 
 export function instantiate(load) {
 	const system = this;
-	const name = normalizeName(
-		load.name.substring(window.location.origin.length + 1)
-	);
+	const originalName = load.name.substring(window.location.origin.length + 1)
+	const name = normalizeName(originalName);
 	const address = scriptNameMap[name];
 
 	if (!address)
@@ -85,6 +84,12 @@ export function instantiate(load) {
 	return system
 		.import(address)
 		.then(load => {
+			if (system.loads && system.trace) {
+				// fix source tracing
+				setTimeout(() => {
+					system.loads[system.normalizeSync(originalName)] = system.loads[system.normalizeSync(address)]
+				});
+			}
 			return load.__esModule ? assign(assign({}, load), { __esModule: true }) : load
 		});
 }

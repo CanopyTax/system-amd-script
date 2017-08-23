@@ -28,6 +28,27 @@ describe('sofe api', function() {
 		.catch(fail)
 	});
 
+	it(`should update traced dependencies`, function(done) {
+		system.config({
+			trace: true,
+			meta: {
+				"navbar": { loader: '/base/test/fixtures/plugin.js' },
+				"main": { loader: '/base/test/fixtures/plugin.js' }
+			}
+		});
+
+		system
+		.import('main')
+		.then(function(m) {
+			setTimeout(() => {
+				expect(system.loads['http://localhost:9876/main'].deps).toEqual(['navbar']);
+				expect(system.loads['http://localhost:9876/navbar'].deps).toEqual([]);
+				done();
+			});
+		})
+		.catch(fail)
+	});
+
 	it('should load modules via script tags with bang config', function(done) {
 		system
 		.import('navbar!/base/test/fixtures/plugin.js')
