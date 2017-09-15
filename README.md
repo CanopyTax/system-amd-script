@@ -28,10 +28,10 @@ to your HTML:
 ```html
 <html>
   <script src="/system.js"></script>
-  <script src="/system-amd-setup.js"></script>
+  <script src="/system-script-setup.js"></script>
   <!--- or --->
   <script>
-    SystemJS.import('system-amd-script/lib/system-amd-setup.js');
+    SystemJS.import('system-amd-script/lib/system-script-setup.js');
   </script>
 </html>
 ```
@@ -57,7 +57,7 @@ You can preload modules by directly putting your module's script tag into your i
 ```html
 <html>
   <script src="/system.js"></script>
-  <script src="/system-amd-setup.js"></script>
+  <script src="/system-script-setup.js"></script>
   <script src="/helper.js"></script>
   <script>
     // Because the helper script tag is already on the page,
