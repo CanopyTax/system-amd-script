@@ -17,7 +17,7 @@ uses script tags to load the modules instead.
 Loaded modules *must* be named AMD modules where the name in the define statement is the same as the name that is being imported. It is recommended to use a locate plugin for AMD resources. [Sofe](https://github.com/CanopyTax/sofe) works well for this.
 
 ```js
-jspm install npm:system-canopy-script
+jspm install npm:system-amd-script
 ```
 
 ### Usage:
