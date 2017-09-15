@@ -10,6 +10,9 @@ describe('sofe api', function() {
 		window.define = function () {
 			window.canopyDefine.apply(window, arguments);
 		}
+		Object.keys(window.__systemAmdScript.scriptNameMap).forEach(key => {
+			delete window.__systemAmdScript.scriptNameMap[key];
+		});
 	});
 
 	it('should load modules via script tags with meta config', function(done) {
