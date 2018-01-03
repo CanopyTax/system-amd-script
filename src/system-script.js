@@ -1,6 +1,24 @@
 let scriptNameMap = window.__systemAmdScript.scriptNameMap;
 let outerSystem = SystemJS;
 
+const ogSystemDelete = outerSystem.delete;
+
+outerSystem.delete = function(normalizedName) {
+  const moduleName = denormalizeName(normalizedName);
+  delete scriptNameMap[moduleName];
+
+  const script = document.querySelector(`script[data-system-amd-name="${moduleName}"]`);
+  if (script) {
+    script.parentNode.removeChild(script);
+  }
+
+  return ogSystemDelete.apply(this, arguments);
+}
+
+function denormalizeName(normalizedName) {
+  const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
+  return withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
+}
 
 function normalizeName(name) {
   return name.indexOf("!") > -1 ? name.substring(0, name.indexOf("!")) : name;
@@ -36,7 +54,7 @@ export function fetch(load) {
 
     if (address) resolve("");
 
-    const script = getScript(load.address, window.__systemAmdScript.denormalizeName(load.name));
+    const script = getScript(load.address, denormalizeName(load.name));
     script.addEventListener("load", complete, false);
     script.addEventListener("error", error, false);
 

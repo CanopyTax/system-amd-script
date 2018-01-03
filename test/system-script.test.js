@@ -1,4 +1,4 @@
-describe('sofe api', function() {
+describe('system-amd-script', function() {
 	let validManifestUrl = 'http://localhost:' + window.location.port + '/base/test/manifests/simple.json';
 
 	let system;
@@ -111,4 +111,23 @@ describe('sofe api', function() {
 			})
 			.catch(fail);
 	});
+
+  it("Should delete a module's script tag and remove from scriptNameMap when SystemJS.delete is called", function(done) {
+    const moduleToImport = 'navbar!/base/test/fixtures/plugin.js';
+		system
+		.import(moduleToImport)
+		.then(function(m) {
+			expect(m()).toBe(1);
+      expect(window.__systemAmdScript.scriptNameMap['navbar']).toBeDefined();
+      expect(document.querySelector(`[data-system-amd-name="navbar"]`)).toBeDefined();
+
+      expect(system.delete(system.normalizeSync(moduleToImport))).toBe(true);
+
+      expect(window.__systemAmdScript.scriptNameMap['navbar']).toBeUndefined();
+      expect(document.querySelector(`[data-system-amd-name="navbar"]`)).toBe(null);
+
+      done();
+		})
+		.catch(fail)
+  });
 });
