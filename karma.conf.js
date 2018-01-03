@@ -18,6 +18,7 @@ module.exports = function(config) {
 			'node_modules/babel-polyfill/dist/polyfill.js',
 			'node_modules/systemjs/dist/system-polyfills.js',
 			'node_modules/systemjs/dist/system.src.js',
+			'src/system-script-setup.js',
 			{ pattern: 'src/system-script.js', watched: true, included: false, served: true},
 			{ pattern: 'test/fixtures/*', watched: true, included: false, served: true},
 			'test/*.test.js'

@@ -1,21 +1,5 @@
-let nameCounter = 0;
-let scriptNameMap = {};
+let scriptNameMap = window.__systemAmdScript.scriptNameMap;
 let outerSystem = SystemJS;
-
-window.define = window.canopyDefine = function(name, deps, m) {
-  if (typeof name === "string") {
-    nameCounter++;
-    const newName = `__script__${nameCounter}`;
-    scriptNameMap[
-      name.indexOf("!") > -1 ? name.substring(0, name.indexOf("!")) : name
-    ] = newName;
-    name = newName;
-  }
-
-  outerSystem.amdDefine(name, deps, m);
-};
-
-window.define.amd = true;
 
 const ogSystemDelete = outerSystem.delete;
 
@@ -57,7 +41,7 @@ function getScript(address) {
 }
 
 export function fetch(load) {
-  outerSystem = this;
+  outerSystem = window.__systemAmdScript.SystemJS = this;
   // Prevent the default XHR request for the resource
   // and resolve with an empty string. The proper module resolution
   // happens inside the instantiate hook
@@ -91,9 +75,8 @@ export function fetch(load) {
 
 export function instantiate(load) {
   const system = this;
-  const name = normalizeName(
-    load.name.substring(window.location.origin.length + 1)
-  );
+  const originalName = load.name.substring(window.location.origin.length + 1)
+  const name = normalizeName(originalName);
   const address = scriptNameMap[name];
 
   if (!address)
@@ -102,18 +85,24 @@ export function instantiate(load) {
   return system
     .import(address)
     .then(load => {
+      if (system.loads && system.trace) {
+        // fix source tracing
+        setTimeout(() => {
+          system.loads[system.normalizeSync(originalName)] = system.loads[system.normalizeSync(address)]
+        });
+      }
       return load.__esModule ? assign(assign({}, load), { __esModule: true }) : load
     });
 }
 
 const assign = function(target, varArgs) {
-    var to = Object(target);
+    let to = Object(target);
 
-    for (var index = 1; index < arguments.length; index++) {
-      var nextSource = arguments[index];
+    for (let index = 1; index < arguments.length; index++) {
+      let nextSource = arguments[index];
 
-      if (nextSource != null) { // Skip over if undefined or null
-        for (var nextKey in nextSource) {
+      if (nextSource !== null) { // Skip over if undefined or null
+        for (let nextKey in nextSource) {
           // Avoid bugs when hasOwnProperty is shadowed
           if (Object.prototype.hasOwnProperty.call(nextSource, nextKey)) {
             to[nextKey] = nextSource[nextKey];

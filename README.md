@@ -17,10 +17,26 @@ uses script tags to load the modules instead.
 Loaded modules *must* be named AMD modules where the name in the define statement is the same as the name that is being imported. It is recommended to use a locate plugin for AMD resources. [Sofe](https://github.com/CanopyTax/sofe) works well for this.
 
 ```js
-jspm install npm:system-canopy-script
+jspm install npm:system-amd-script
 ```
 
 ### Usage:
+You will need to load the setup file before loading any modules. You can
+do this by bundling or importing the setup file, or manually adding it
+to your HTML:
+
+```html
+<html>
+  <script src="/system.js"></script>
+  <script src="/system-script-setup.js"></script>
+  <!--- or --->
+  <script>
+    SystemJS.import('system-amd-script/lib/system-script-setup.js');
+  </script>
+</html>
+```
+
+Now you can easily load modules via script tags:
 
 ```js
 // Module helper.js
@@ -41,7 +57,7 @@ You can preload modules by directly putting your module's script tag into your i
 ```html
 <html>
   <script src="/system.js"></script>
-  <script src="/system-amd-script.js"></script>
+  <script src="/system-script-setup.js"></script>
   <script src="/helper.js"></script>
   <script>
     // Because the helper script tag is already on the page,
