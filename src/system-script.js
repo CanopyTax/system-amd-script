@@ -1,28 +1,12 @@
 let scriptNameMap = window.__systemAmdScript.scriptNameMap;
 let outerSystem = SystemJS;
 
-const ogSystemDelete = outerSystem.delete;
-
-outerSystem.delete = function(normalizedName) {
-  // This is asynchronous, but SystemJS.delete is synchronous. We just accept the race condition :'(
-  SystemJS.import('sofe').then(sofe => sofe.locate({address: normalizedName})).then(url => {
-    const script = document.querySelector(`script[src="${url}"]`);
-    if (script) {
-      script.parentNode.removeChild(script);
-    }
-    const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
-    const sofeServiceName = withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
-    delete scriptNameMap[sofeServiceName];
-  })
-
-  return ogSystemDelete.apply(this, arguments);
-}
 
 function normalizeName(name) {
   return name.indexOf("!") > -1 ? name.substring(0, name.indexOf("!")) : name;
 }
 
-function getScript(address) {
+function getScript(address, name) {
   const existingScripts = Array.prototype.filter.call(
     document.querySelectorAll("script"),
     script => script.src === address
@@ -36,6 +20,7 @@ function getScript(address) {
   const script = document.createElement("script");
   script.async = true;
   script.src = address;
+  script.setAttribute('data-system-amd-name', name)
   head.appendChild(script);
   return script;
 }
@@ -51,7 +36,7 @@ export function fetch(load) {
 
     if (address) resolve("");
 
-    const script = getScript(load.address);
+    const script = getScript(load.address, window.__systemAmdScript.denormalizeName(load.name));
     script.addEventListener("load", complete, false);
     script.addEventListener("error", error, false);
 
