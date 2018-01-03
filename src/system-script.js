@@ -17,6 +17,23 @@ window.define = window.canopyDefine = function(name, deps, m) {
 
 window.define.amd = true;
 
+const ogSystemDelete = outerSystem.delete;
+
+outerSystem.delete = function(normalizedName) {
+  // This is asynchronous, but SystemJS.delete is synchronous. We just accept the race condition :'(
+  SystemJS.import('sofe').then(sofe => sofe.locate({address: normalizedName})).then(url => {
+    const script = document.querySelector(`script[src="${url}"]`);
+    if (script) {
+      script.parentNode.removeChild(script);
+    }
+    const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
+    const sofeServiceName = withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
+    delete scriptNameMap[sofeServiceName];
+  })
+
+  return ogSystemDelete.apply(this, arguments);
+}
+
 function normalizeName(name) {
 	return name.indexOf("!") > -1 ? name.substring(0, name.indexOf("!")) : name;
 }
