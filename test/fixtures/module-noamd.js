@@ -1,3 +1,3 @@
 !function() {
-	// this shouldn't resolve
+  // this shouldn't resolve
 }();
