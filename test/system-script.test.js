@@ -113,18 +113,18 @@ describe('system-amd-script', function() {
   });
 
   it("Should delete a module's script tag and remove from scriptNameMap when SystemJS.delete is called", function(done) {
-    const moduleToImport = 'navbar!/base/test/fixtures/plugin.js';
+    const moduleToImport = 'foo!/base/test/fixtures/plugin.js';
+
     system
     .import(moduleToImport)
     .then(function(m) {
-      expect(m()).toBe(1);
-      expect(window.__systemAmdScript.scriptNameMap['navbar']).toBeDefined();
-      expect(document.querySelector(`[data-system-amd-name="navbar"]`)).toBeDefined();
+      expect(window.__systemAmdScript.scriptNameMap['foo']).toBeDefined();
+      expect(document.querySelector(`[data-system-amd-name="foo"]`)).toBeDefined();
 
       expect(system.delete(system.normalizeSync(moduleToImport))).toBe(true);
 
-      expect(window.__systemAmdScript.scriptNameMap['navbar']).toBeUndefined();
-      expect(document.querySelector(`[data-system-amd-name="navbar"]`)).toBe(null);
+      expect(window.__systemAmdScript.scriptNameMap['foo']).toBeUndefined();
+      expect(document.querySelector(`[data-system-amd-name="foo"]`)).toBe(null);
 
       done();
     })
