@@ -6,7 +6,7 @@
   "scripts": {
     "test": "karma start karma.conf.js",
     "dist": "npm run clean && npm run build && npm run uglify",
-    "build": "babel src --out-dir lib && node build.js",
+    "build": "babel src --out-dir lib --source-maps && node build.js",
     "uglify": "uglifyjs dist/system-amd-script.js --source-map -o dist/system-amd-script.min.js && echo 'Uglified system-amd-script into dist/system-amd-script.min.js'",
     "clean": "rm -rf lib dist",
     "prepublish": "npm run dist"
