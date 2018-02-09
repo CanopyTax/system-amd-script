@@ -71,7 +71,9 @@ export function fetch(load) {
     }
 
     function error(evt) {
-      reject(new Error(`Error loading module from the address: "${load.address}"`));
+      const err = evt && evt.error;
+      const errString = err ? `LoadErr: ${err.message} from ${err.stack}` : 'No error data';
+      reject(new Error(`Error loading module from the address: "${load.address}". ${errString}`));
     }
   });
 }
