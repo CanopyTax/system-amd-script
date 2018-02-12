@@ -25,13 +25,9 @@ function normalizeName(name) {
 }
 
 function getScript(address, name) {
-  const existingScripts = Array.prototype.filter.call(
-    document.querySelectorAll("script"),
-    script => script.src === address
-  );
-
-  if (existingScripts.length) {
-    return existingScripts[0];
+  const existingScript = document.querySelector(`script[src="${address}"]`);
+  if (existingScript) {
+    return existingScript;
   }
 
   const head = document.getElementsByTagName("head")[0];
@@ -54,24 +50,35 @@ export function fetch(load) {
 
     if (address) resolve("");
 
-    const script = getScript(load.address, denormalizeName(load.name));
-    script.addEventListener("load", complete, false);
-    script.addEventListener("error", error, false);
+    tryDownloadScript(1);
 
-    function complete() {
-      if (
-        script.readyState &&
-        script.readyState !== "loaded" &&
-        script.readyState !== "complete"
-      ) {
-        return;
+    function tryDownloadScript(attempt) {
+      const script = getScript(load.address, denormalizeName(load.name));
+      script.addEventListener("load", complete, false);
+      script.addEventListener("error", error, false);
+
+      function complete() {
+        if (
+          script.readyState &&
+          script.readyState !== "loaded" &&
+          script.readyState !== "complete"
+        ) {
+          return;
+        }
+
+        resolve("");
       }
 
-      resolve("");
-    }
-
-    function error(evt) {
-      reject(new Error(`Error loading module from the address: "${load.address}"`));
+      function error(evt) {
+        if (attempt >= 3) {
+          reject(new Error(`Error loading module "${denormalizeName(load.name)}"`));
+        } else {
+          setTimeout(() => {
+            script.parentNode.removeChild(script);
+            tryDownloadScript(attempt + 1);
+          })
+        }
+      }
     }
   });
 }
