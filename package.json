@@ -1,6 +1,6 @@
 {
   "name": "system-amd-script",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "SystemJS plugin for script loading sofe services",
   "main": "dist/system-amd-script.js",
   "scripts": {
