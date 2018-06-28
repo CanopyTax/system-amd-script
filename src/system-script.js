@@ -17,7 +17,7 @@ outerSystem.delete = function(normalizedName) {
 
 function denormalizeName(normalizedName) {
   const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
-  return withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
+  return withoutBang.slice(withoutBang.lastIndexOf('/') + 1);
 }
 
 function normalizeName(name) {
@@ -54,6 +54,7 @@ export function fetch(load) {
 
     if (address) resolve("");
 
+    console.log('load.name', load.name)
     const script = getScript(load.address, denormalizeName(load.name));
     script.addEventListener("load", complete, false);
     script.addEventListener("error", error, false);
