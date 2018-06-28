@@ -17,7 +17,7 @@ outerSystem.delete = function(normalizedName) {
 
 function denormalizeName(normalizedName) {
   const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
-  return withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
+  return withoutBang.slice(withoutBang.lastIndexOf('/') + 1);
 }
 
 function normalizeName(name) {
