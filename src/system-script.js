@@ -17,7 +17,7 @@ outerSystem.delete = function(normalizedName) {
 
 function denormalizeName(normalizedName) {
   const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
-  return withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
+  return withoutBang.slice(withoutBang.lastIndexOf('/') + 1);
 }
 
 function normalizeName(name) {
@@ -25,10 +25,13 @@ function normalizeName(name) {
 }
 
 function getScript(address, name) {
-  const existingScript = document.querySelector(`script[src="${address}"]`)
+  const existingScripts = Array.prototype.filter.call(
+    document.querySelectorAll("script"),
+    script => script.src === address
+  );
 
-  if (existingScript) {
-    return existingScript;
+  if (existingScripts.length) {
+    return existingScripts[0];
   }
 
   const head = document.getElementsByTagName("head")[0];
@@ -51,6 +54,7 @@ export function fetch(load) {
 
     if (address) resolve("");
 
+    console.log('load.name', load.name)
     const script = getScript(load.address, denormalizeName(load.name));
     script.addEventListener("load", complete, false);
     script.addEventListener("error", error, false);
