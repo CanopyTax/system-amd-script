@@ -25,13 +25,10 @@ function normalizeName(name) {
 }
 
 function getScript(address, name) {
-  const existingScripts = Array.prototype.filter.call(
-    document.querySelectorAll("script"),
-    script => script.src === address
-  );
+  const existingScript = document.querySelector(`script[src="${address}"]`)
 
-  if (existingScripts.length) {
-    return existingScripts[0];
+  if (existingScript) {
+    return existingScript;
   }
 
   const head = document.getElementsByTagName("head")[0];
