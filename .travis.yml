@@ -3,6 +3,7 @@ node_js:
       - "node"
 addons:
   chrome: stable
+sudo: required
 before_script:
       - npm install
       - npm install -g codecov
