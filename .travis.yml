@@ -8,5 +8,5 @@ before_script:
       - yarn global add codecov
       - yarn build
 script:
-    - npm run test
+    - yarn test
     - codecov
