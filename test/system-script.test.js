@@ -16,7 +16,6 @@ describe('system-amd-script', function() {
   });
 
   it('should load modules via script tags with meta config', function() {
-    console.log('meta test')
     SystemJS.config({
       meta: {
         "navbar": { loader: '/base/test/fixtures/plugin.js' }
@@ -31,7 +30,6 @@ describe('system-amd-script', function() {
   });
 
   it(`should update traced dependencies`, function() {
-    console.log('trace test')
     SystemJS.config({
       trace: true,
       meta: {
