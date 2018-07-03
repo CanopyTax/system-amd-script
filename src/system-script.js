@@ -16,7 +16,8 @@ outerSystem.delete = function(normalizedName) {
 }
 
 function denormalizeName(normalizedName) {
-  const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
+  const bangIndex = normalizedName.indexOf('!')
+  const withoutBang = bangIndex >= 0 ? normalizedName.slice(0, bangIndex) : normalizedName
   return withoutBang.slice(withoutBang.lastIndexOf('/') + 1);
 }
 
@@ -54,6 +55,10 @@ export function fetch(load) {
 
     function tryDownloadScript(attempt) {
       const script = getScript(load.address, denormalizeName(load.name));
+
+      // We add load and error listeners, which only work for scripts that aren't already loaded.
+      // But the scripts that are already loaded should have called window.define, which populates the
+      // scriptNameMap and causes the `fetch` hook to shortcircuit before this code is ever executed.
       script.addEventListener("load", complete, false);
       script.addEventListener("error", error, false);
 
@@ -63,18 +68,18 @@ export function fetch(load) {
           script.readyState !== "loaded" &&
           script.readyState !== "complete"
         ) {
-          return;
+          reject(`Error loading module - script.readyState is '${script.readyState}' for "${denormalizeName(load.name)}" from address "${load.address}"`)
+        } else {
+          resolve("");
         }
-
-        resolve("");
       }
 
       function error(evt) {
+        script.parentNode.removeChild(script);
         if (attempt >= 3) {
-          reject(new Error(`Error loading module "${denormalizeName(load.name)}"`));
+          reject(new Error(`Error loading module "${denormalizeName(load.name)}" from address "${load.address}"`));
         } else {
           setTimeout(() => {
-            script.parentNode.removeChild(script);
             tryDownloadScript(attempt + 1);
           })
         }
