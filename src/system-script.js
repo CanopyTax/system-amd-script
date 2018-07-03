@@ -75,11 +75,14 @@ export function fetch(load) {
       }
 
       function error(evt) {
-        script.parentNode.removeChild(script);
         if (attempt >= 3) {
           reject(new Error(`Error loading module "${denormalizeName(load.name)}" from address "${load.address}"`));
         } else {
           setTimeout(() => {
+            // Delete the script tag so that when we retry to download the browser doesn't
+            // see that there's already a script tag with the same src and then skip out
+            // on actually downloading it
+            script.parentNode.removeChild(script);
             tryDownloadScript(attempt + 1);
           })
         }
