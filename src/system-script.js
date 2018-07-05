@@ -8,7 +8,7 @@ outerSystem.delete = function(normalizedName) {
   delete scriptNameMap[moduleName];
 
   const script = document.querySelector(`script[data-system-amd-name="${moduleName}"]`);
-  if (script) {
+  if (script && script.parentNode) {
     script.parentNode.removeChild(script);
   }
 
@@ -82,7 +82,9 @@ export function fetch(load) {
             // Delete the script tag so that when we retry to download the browser doesn't
             // see that there's already a script tag with the same src and then skip out
             // on actually downloading it
-            script.parentNode.removeChild(script);
+            if (script && script.parentNode) {
+              script.parentNode.removeChild(script);
+            }
             tryDownloadScript(attempt + 1);
           })
         }
