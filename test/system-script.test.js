@@ -9,7 +9,8 @@ describe('system-amd-script', function() {
     }
     const scripts = document.querySelectorAll('script[data-system-amd-name]')
     for (let i=0; i<scripts.length; i++) {
-      scripts[i].remove() }
+      scripts[i].remove()
+    }
     Object.keys(window.__systemAmdScript.scriptNameMap).forEach(key => {
       delete window.__systemAmdScript.scriptNameMap[key];
     });
