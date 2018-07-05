@@ -8,7 +8,7 @@ outerSystem.delete = function(normalizedName) {
   delete scriptNameMap[moduleName];
 
   const script = document.querySelector(`script[data-system-amd-name="${moduleName}"]`);
-  if (script) {
+  if (script && script.parentNode) {
     script.parentNode.removeChild(script);
   }
 
@@ -16,7 +16,8 @@ outerSystem.delete = function(normalizedName) {
 }
 
 function denormalizeName(normalizedName) {
-  const withoutBang = normalizedName.slice(0, normalizedName.indexOf('!'));
+  const bangIndex = normalizedName.indexOf('!')
+  const withoutBang = bangIndex >= 0 ? normalizedName.slice(0, bangIndex) : normalizedName
   return withoutBang.slice(withoutBang.lastIndexOf('/') + 1);
 }
 
@@ -25,13 +26,9 @@ function normalizeName(name) {
 }
 
 function getScript(address, name) {
-  const existingScripts = Array.prototype.filter.call(
-    document.querySelectorAll("script"),
-    script => script.src === address
-  );
-
-  if (existingScripts.length) {
-    return existingScripts[0];
+  const existingScript = document.querySelector(`script[src="${address}"]`);
+  if (existingScript) {
+    return existingScript;
   }
 
   const head = document.getElementsByTagName("head")[0];
@@ -54,25 +51,44 @@ export function fetch(load) {
 
     if (address) resolve("");
 
-    console.log('load.name', load.name)
-    const script = getScript(load.address, denormalizeName(load.name));
-    script.addEventListener("load", complete, false);
-    script.addEventListener("error", error, false);
+    tryDownloadScript(1);
 
-    function complete() {
-      if (
-        script.readyState &&
-        script.readyState !== "loaded" &&
-        script.readyState !== "complete"
-      ) {
-        return;
+    function tryDownloadScript(attempt) {
+      const script = getScript(load.address, denormalizeName(load.name));
+
+      // We add load and error listeners, which only work for scripts that aren't already loaded.
+      // But the scripts that are already loaded should have called window.define, which populates the
+      // scriptNameMap and causes the `fetch` hook to shortcircuit before this code is ever executed.
+      script.addEventListener("load", complete, false);
+      script.addEventListener("error", error, false);
+
+      function complete() {
+        if (
+          script.readyState &&
+          script.readyState !== "loaded" &&
+          script.readyState !== "complete"
+        ) {
+          reject(`Error loading module - script.readyState is '${script.readyState}' for "${denormalizeName(load.name)}" from address "${load.address}"`)
+        } else {
+          resolve("");
+        }
       }
 
-      resolve("");
-    }
-
-    function error(evt) {
-      reject(new Error(`Error loading module from the address: "${load.address}"`));
+      function error(evt) {
+        if (attempt >= 3) {
+          reject(new Error(`Error loading module "${denormalizeName(load.name)}" from address "${load.address}"`));
+        } else {
+          setTimeout(() => {
+            // Delete the script tag so that when we retry to download the browser doesn't
+            // see that there's already a script tag with the same src and then skip out
+            // on actually downloading it
+            if (script && script.parentNode) {
+              script.parentNode.removeChild(script);
+            }
+            tryDownloadScript(attempt + 1);
+          })
+        }
+      }
     }
   });
 }
