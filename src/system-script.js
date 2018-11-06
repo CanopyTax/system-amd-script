@@ -15,6 +15,14 @@ outerSystem.delete = function(normalizedName) {
   return ogSystemDelete.apply(this, arguments);
 }
 
+function truncateUrl(url) {
+  const path = window.location.pathname.substring(
+    0,
+    window.location.pathname.lastIndexOf('/') + 1,
+  );
+  return url.substring((window.location.origin + path).length);
+}
+
 function denormalizeName(normalizedName) {
   const bangIndex = normalizedName.indexOf('!')
   const withoutBang = bangIndex >= 0 ? normalizedName.slice(0, bangIndex) : normalizedName
@@ -46,7 +54,7 @@ export function fetch(load) {
   // and resolve with an empty string. The proper module resolution
   // happens inside the instantiate hook
   return new Promise((resolve, reject) => {
-    const name = normalizeName(load.name.substring(window.location.origin.length + 1));
+    const name = normalizeName(truncateUrl(load.name));
     const address = scriptNameMap[name];
 
     if (address) resolve("");
@@ -95,7 +103,7 @@ export function fetch(load) {
 
 export function instantiate(load) {
   const system = this;
-  const originalName = load.name.substring(window.location.origin.length + 1)
+  const originalName = truncateUrl(load.name);
   const name = normalizeName(originalName);
   const address = scriptNameMap[name];
 
