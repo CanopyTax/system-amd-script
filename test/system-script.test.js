@@ -16,7 +16,7 @@ describe('system-amd-script', function() {
     });
   });
 
-  it('should load modules via script tags with meta config', function() {
+ it('should load modules via script tags with meta config', function() {
     SystemJS.config({
       meta: {
         "navbar": { loader: '/base/test/fixtures/plugin.js' }
@@ -65,7 +65,7 @@ describe('system-amd-script', function() {
         fail(new Error('Should not have resolved!'));
       })
       .catch(error => {
-        expect(error.message.split('\n')[0]).toBe('base/test/fixtures/module-noamd.js was not properly loaded!');
+        expect(error.message.split('\n')[0]).toBe('module-noamd.js was not properly loaded!');
       })
   });
 
