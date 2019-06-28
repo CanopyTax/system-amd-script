@@ -103,8 +103,10 @@ export function fetch(load) {
 
 export function instantiate(load) {
   const system = this;
-  const originalName = truncateUrl(load.name);
-  const name = normalizeName(originalName);
+  const withoutBang = load.name.includes('!') ? load.name.substring(0, load.name.indexOf('!')) : load.name;
+  const originalName = load.name;
+  const name = withoutBang.substring(withoutBang.lastIndexOf('/') + 1);
+
   const address = scriptNameMap[name];
 
   if (!address)
@@ -116,7 +118,7 @@ export function instantiate(load) {
       if (system.loads && system.trace) {
         // fix source tracing
         setTimeout(() => {
-          system.loads[system.normalizeSync(originalName)] = system.loads[system.normalizeSync(address)]
+          system.loads[originalName] = system.loads[system.normalizeSync(address)]
         });
       }
       return load.__esModule ? assign(assign({}, load), { __esModule: true }) : load
